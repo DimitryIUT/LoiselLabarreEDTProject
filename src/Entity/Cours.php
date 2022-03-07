@@ -34,6 +34,11 @@ class Cours
     #[ORM\JoinColumn(nullable: false)]
     private $salle;
 
+    public function __toString()
+    {
+        return sprintf('%s-%s : %s - %s', date_format($this->dateHeureDebut, "H:i:s"), date_format($this->dateHeureFin, "H:i:s"), $this->getMatiere(), $this->getProfesseur());
+    }
+
     public function getId(): ?int
     {
         return $this->id;
