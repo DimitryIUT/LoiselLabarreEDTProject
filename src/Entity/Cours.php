@@ -4,8 +4,11 @@ namespace App\Entity;
 
 use App\Repository\CoursRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use App\Validator\DateHeureCours;
 
 #[ORM\Entity(repositoryClass: CoursRepository::class)]
+#[DateHeureCours()]
 class Cours
 {
     #[ORM\Id]
@@ -24,14 +27,17 @@ class Cours
 
     #[ORM\ManyToOne(targetEntity: Matiere::class, inversedBy: 'cours')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Assert\NotNull]
     private $matiere;
 
     #[ORM\ManyToOne(targetEntity: Professeur::class, inversedBy: 'cours')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Assert\NotNull]
     private $professeur;
 
     #[ORM\ManyToOne(targetEntity: Salle::class, inversedBy: 'cours')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Assert\NotNull]
     private $salle;
 
     public function __toString()
