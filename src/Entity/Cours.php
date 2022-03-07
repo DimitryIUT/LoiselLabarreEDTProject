@@ -22,6 +22,18 @@ class Cours
     #[ORM\Column(type: 'string', length: 255)]
     private $type;
 
+    #[ORM\ManyToOne(targetEntity: Matiere::class, inversedBy: 'cours')]
+    #[ORM\JoinColumn(nullable: false)]
+    private $Matiere;
+
+    #[ORM\ManyToOne(targetEntity: Professeur::class, inversedBy: 'cours')]
+    #[ORM\JoinColumn(nullable: false)]
+    private $Professeur;
+
+    #[ORM\ManyToOne(targetEntity: Salle::class, inversedBy: 'cours')]
+    #[ORM\JoinColumn(nullable: false)]
+    private $Salle;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -59,6 +71,42 @@ class Cours
     public function setType(string $type): self
     {
         $this->type = $type;
+
+        return $this;
+    }
+
+    public function getMatiere(): ?Matiere
+    {
+        return $this->Matiere;
+    }
+
+    public function setMatiere(?Matiere $Matiere): self
+    {
+        $this->Matiere = $Matiere;
+
+        return $this;
+    }
+
+    public function getProfesseur(): ?Professeur
+    {
+        return $this->Professeur;
+    }
+
+    public function setProfesseur(?Professeur $Professeur): self
+    {
+        $this->Professeur = $Professeur;
+
+        return $this;
+    }
+
+    public function getSalle(): ?Salle
+    {
+        return $this->Salle;
+    }
+
+    public function setSalle(?Salle $Salle): self
+    {
+        $this->Salle = $Salle;
 
         return $this;
     }
