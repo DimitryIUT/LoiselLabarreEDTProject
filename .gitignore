@@ -8,4 +8,5 @@
 /var/
 /vendor
 /composer.json
+/.vs/
 ###< symfony/framework-bundle ###
