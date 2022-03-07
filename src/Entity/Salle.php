@@ -18,7 +18,7 @@ class Salle
     #[ORM\Column(type: 'string', length: 255)]
     private $numero;
 
-    #[ORM\OneToMany(mappedBy: 'Salle', targetEntity: Cours::class)]
+    #[ORM\OneToMany(mappedBy: 'salle', targetEntity: Cours::class)]
     private $cours;
 
     public function __construct()

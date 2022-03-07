@@ -24,7 +24,7 @@ class Matiere implements \JsonSerializable
     #[ORM\ManyToMany(targetEntity: Professeur::class, mappedBy: 'matieres')]
     private $professeurs;
 
-    #[ORM\OneToMany(mappedBy: 'Matiere', targetEntity: Cours::class, orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'matiere', targetEntity: Cours::class, orphanRemoval: true)]
     private $cours;
 
     public function __construct()
