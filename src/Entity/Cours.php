@@ -6,9 +6,13 @@ use App\Repository\CoursRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use App\Validator\DateHeureCours;
+use App\Validator\SalleDisponible;
+use App\Validator\ProfesseurDisponible;
 
 #[ORM\Entity(repositoryClass: CoursRepository::class)]
 #[DateHeureCours()]
+#[SalleDisponible()]
+#[ProfesseurDisponible()]
 class Cours
 {
     #[ORM\Id]

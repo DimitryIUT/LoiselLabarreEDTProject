@@ -4,10 +4,7 @@ namespace App\Validator;
 
 use Symfony\Component\Validator\Constraint;
 
-/**
- * @Annotation
- */
-#[\Attribute]class DateHeureCours extends Constraint {
+#[\Attribute] class DateHeureCours extends Constraint {
     public $message = 'Le début et la fin du cours doivent être le même jour.';
 
     public function getTargets() {

@@ -5,6 +5,7 @@ namespace App\Controller\Admin;
 use App\Entity\Cours;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 
 class CoursCrudController extends AbstractCrudController
 {
@@ -19,7 +20,9 @@ class CoursCrudController extends AbstractCrudController
         return [
             'dateHeureDebut',
             'dateHeureFin',
-            'type',
+            ChoiceField::new('type')
+                ->setChoices(fn() => ["Cours" => "Cours", "TD" => "TD", "TP" => "TP"])
+                ->renderAsNativeWidget(),
             AssociationField::new('matiere')
                 ->setFormTypeOptions([
                     'by_reference' => false,

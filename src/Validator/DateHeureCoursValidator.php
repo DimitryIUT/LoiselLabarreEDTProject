@@ -7,7 +7,7 @@ use Symfony\Component\Validator\ConstraintValidator;
 use Symfony\Component\Validator\Exception\UnexpectedTypeException;
 use Symfony\Component\Validator\Exception\UnexpectedValueException;
 
-#[\Attribute] class DateHeureCoursValidator extends ConstraintValidator {
+class DateHeureCoursValidator extends ConstraintValidator {
     public function validate($cours, Constraint $constraint) {
         $dateHeureDebutCours = $cours->getDateHeureDebut();
         $dateHeureFinCours = $cours->getDateHeureFin();
