@@ -1,0 +1,160 @@
+</!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Note ton prof !</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    </head>
+    <body>
+        <div id="app" class="container">
+            <div class="row">
+                <div class="col-8">
+                    <h1>Note ton prof !</h1>
+
+                    <div class="row">
+                        <div class="col-6" v-for="p in professeurs">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div :class="{'bg-light': p.id === profSelect?.id}">
+                                        <h5 class="card-title">{{p.prenom + ' '+ p.nom}}</h5>
+                                        <p class="card-text">
+                                            {{p.email}} <br>
+                                            <button v-on:click="getAvis(p)" :disabled="p.id === profSelect?.id" class="btn btn-primary">Afficher les avis</button>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-4" v-if="profSelect">
+                    <h2>Avis concernant {{profSelect.prenom +' '+profSelect.nom}}</h2>
+
+                    <ul class="text-danger">
+                        <li v-for="e in errorsForm">{{ e }}</li>
+                    </ul>
+
+                    <form class="mn-5" v-on:submit.prevent="postAvis()">
+                        <div class="form-group">
+                            <label>Note</label>
+                            <select class="form-control" v-model="nouvelleAvis.note">
+                                <option>0</option>
+                                <option>1</option>
+                                <option>2</option>
+                                <option>3</option>
+                                <option>4</option>
+                                <option>5</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Commentaire</label>
+                            <textarea class="form-control" required v-model="nouvelleAvis.commentaire"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Email</label>
+                            <input type="email" class="form-control" required v-model="nouvelleAvis.emailEtudiant">
+                        </div>
+                        <div class="form-group mt-2">
+                            <input type="submit" class="btn-primary btn" value="Ajouter un avis">
+                        </div>
+                    </form>
+
+                    <div class="card mt-1" v-for="a in avis">
+                        <div class="card-body">
+                            <h5 class="card-title">{{'Note : '+ a.note+'/5'}}</h5>
+                            <p class="card-text">
+                                <i>Commentaire de {{a.emailEtudiant}}</i><br>
+                                {{a.commentaire}} <br>
+                            </p>
+                            <button v-if="mesAvis.includes(a.id)" v-on:click="supprAvis(a.id)" class="btn btn-danger mt-5">Supprimer</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script src="https://unpkg.com/vue@3"></script>
+        <script src="https://unpkg.com/axios"></script>
+        <script>
+        const app = Vue.createApp({
+            data() {
+                return {
+                    apiUrl: "http://localhost:8888/api/",
+                    professeurs:[],
+                    avis:[],
+                    profSelect: null,
+                    nouvelleAvis: {
+                        note: 0,
+                        commentaire: null,
+                        emailEtudiant:null
+                    },
+                    errorsForm: [],
+                    mesAvis: []
+                }
+            },
+            methods: {
+                getProfesseurs: function(){
+                    axios.get(this.apiUrl+"professeurs")
+                    .then(response=>{
+                        this.professeurs=response.data;
+                    })
+                    .catch(error=>{
+                        console.log(error);
+                    })
+                },
+                createAvis: function(){
+                    return{
+                        note: 0,
+                        commentaire: "",
+                        emailEtudiant:""
+                    }
+                },
+                postAvis: function(){
+                    axios.post(this.apiUrl+"professeurs/"+this.profSelect.id+"/avis",this.nouvelleAvis)
+                    .then(response=>{
+                        console.log("Succes");
+                        this.getAvis(this.profSelect);
+                        this.errorsForm= [];
+                        this.mesAvis.push(response.data.id);
+                        this.nouvelleAvis=this.createAvis();
+                        //this.avis.push(response.data);
+                    })
+                    .catch(error=>{
+                        this.errorsForm=Object.values(error.response.data);
+                        console.log(error);
+                    })
+                },
+                supprAvis: function(id){
+                    axios.delete(this.apiUrl+"professeurs/avis/"+id)
+                    .then(response=>{
+                        console.log("Succes");
+                        this.getAvis(this.profSelect);
+                        console.log(this.mesAvis);
+                        this.mesAvis.splice(this.mesAvis.indexOf(id),1);
+                        console.log(this.mesAvis);
+                    })
+                    .catch(error=>{
+                        console.log(error);
+                    })
+                },
+                getAvis: function(prof) {
+                    this.nouvelleAvis=this.createAvis();
+                    this.errorsForm= [];
+                    axios.get(this.apiUrl+"professeurs/"+prof.id+"/avis")
+                    .then(response=>{
+                        this.avis=response.data;
+                        this.profSelect= prof;
+                    })
+                    .catch(error=>{
+                        console.log(error);
+                    })
+                }
+            },
+            mounted() {
+                this.getProfesseurs();
+            }
+
+        }).mount('#app');
+        </script>
+    </body>
+</html>
