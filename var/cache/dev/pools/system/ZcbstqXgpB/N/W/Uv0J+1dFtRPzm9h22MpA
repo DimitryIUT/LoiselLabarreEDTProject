@@ -1,0 +1,3 @@
+<?php //App%255CController%255CApi%255CProfesseurController%2523formatErrors
+
+return [PHP_INT_MAX, []];
