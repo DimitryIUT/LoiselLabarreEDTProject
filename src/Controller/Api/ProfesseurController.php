@@ -158,7 +158,16 @@ class ProfesseurController extends AbstractController
         }
 
         $professeurs = $professeurRepository->findByCoursFromDate($dateCours);
+        $keys = array();
+        $professeursReturn = array();
+        foreach ($professeurs as $professeur){
+            $key = $professeur["id"];
+            if (!in_array($key,$keys)){
+                $keys[] = $key;
+                $professeursReturn[] = $professeur;
+            }
+        }
 
-        return $this->json($professeurs, 200);
+        return $this->json($professeursReturn, 200);
     }
 }

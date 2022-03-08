@@ -62,8 +62,6 @@ var app = new Vue({
             this.getProfesseurs();
         },
         showEventDetails ({ nativeEvent, event }) {
-            console.log(event)
-
             this.currentClassInformations = {
                 id: event.id,
                 name: event.name,
