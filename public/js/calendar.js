@@ -33,6 +33,7 @@ var app = new Vue({
     },
     methods: {
         getPreviousDate(){
+            this.events=[];
             this.isLoadingClass = true;
             this.isLoadingTeachers = true;
             this.isLoadingNotice = true;
@@ -42,6 +43,7 @@ var app = new Vue({
             this.getProfesseurs();
         },
         getNextDate(){
+            this.events=[];
             this.isLoadingClass = true;
             this.isLoadingTeachers = true;
             this.isLoadingNotice = true;
@@ -51,6 +53,7 @@ var app = new Vue({
             this.getProfesseurs();
         },
         backToCurrentDate(){
+            this.events=[];
             this.isLoadingClass = true;
             this.isLoadingTeachers = true;
             this.isLoadingNotice = true;
@@ -107,7 +110,16 @@ var app = new Vue({
 
             axios.get(this.apiBase + '/cours/' + date )
                 .then(response => {
-                    this.events = response.data;
+                    response.data.forEach((cours,i)=>{
+                        this.events.push({
+                            name: cours.titre,
+                            salle:cours.numero,
+                            type:cours.type,
+                            professeur:cours.prenom + " "+cours.nom,
+                            start:cours.dateHeureDebut.date.slice(0, 16),
+                            end: cours.dateHeureFin.date.slice(0, 16),
+                        });
+                    });
                     this.isLoadingClass = false;
                 })
                 .catch(error => {
@@ -159,7 +171,7 @@ var app = new Vue({
         getAvis: function (professeur) {
             //this.nouvelAvis = this.newAvis();
             this.errors = [];
-            axios.get(this.apiBase + '/avis/' + professeur.id)
+            axios.get(this.apiBase + '/professeurs/' + professeur.id + '/avis')
                 .then(response => {
                     this.professeurCourant = professeur;
                     this.avis = response.data;
@@ -176,9 +188,9 @@ var app = new Vue({
                 emailEtudiant: '',
             };
         },
-        postAvis: function () {
+        postAvis: function (professeur) {
             this.errors = [];
-            axios.post(this.apiBase + '/avis/' + this.professeurCourant.id, this.nouvelAvis)
+            axios.post(this.apiBase + '/professeurs/' + professeur.id + '/avis', this.nouvelAvis)
                 .then(response => {
                     this.avis.unshift(response.data);
                     this.nouvelAvis = this.newAvis();
@@ -192,7 +204,7 @@ var app = new Vue({
                 });
         },
         deleteAvis: function (avis) {
-            axios.delete(this.apiBase + '/avis/' + avis.id)
+            axios.delete(this.apiBase + '/professeurs/avis/' + avis.id)
                 .then(response => {
                     this.avis.splice(this.avis.indexOf(avis), 1);
                     this.mesAvis.splice(this.mesAvis.indexOf(avis), 1);
@@ -211,6 +223,7 @@ var app = new Vue({
         },
     },
     mounted() {
+        this.events=[];
         this.getProfesseurs();
         this.getCours();
         this.ready = true;

@@ -49,13 +49,17 @@ class CoursRepository extends ServiceEntityRepository
      * @return Cours[] Returns an array of Cours objects
      */
     public function findByDate($date) {
-        return $this->createQueryBuilder('c')
-            ->where('c.dateHeureDebut LIKE :date')
-            ->setParameter('date', $date->format('Y-m-d') . '%')
-            ->orderBy('c.dateHeureDebut', 'ASC')
+         $date = $date->format('Y-m-d');
+        
+        return $this->createQueryBuilder('cours')
+            ->select("cours.id, cours.dateHeureDebut, cours.dateHeureFin, cours.type, professeur.nom, professeur.prenom, salle.numero, matiere.titre, matiere.reference")
+            ->leftJoin('cours.professeur', 'professeur')
+            ->leftJoin('cours.matiere', 'matiere')
+            ->leftJoin('cours.salle', 'salle')
+            ->where("cours.dateHeureDebut BETWEEN '$date 00:00:00' AND '$date 23:59:59'")
+            ->OrderBy('cours.dateHeureDebut', 'ASC')
             ->getQuery()
-            ->getResult()
-            ;
+            ->getResult();
     }
 
     // /**

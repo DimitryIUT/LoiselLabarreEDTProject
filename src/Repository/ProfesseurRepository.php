@@ -50,10 +50,11 @@ class ProfesseurRepository extends ServiceEntityRepository
      */
     public function findByCoursFromDate($date): array
     {
-        return $this->createQueryBuilder('p')
-            ->join('p.cours', 'c')
-            ->where('c.dateHeureDebut LIKE :date')
-            ->setParameter('date', $date->format('Y-m-d') . '%')
+        $date = $date->format('Y-m-d');
+        return $this->createQueryBuilder('professeur')
+            ->select("professeur.id, professeur.nom, professeur.prenom, professeur.email, cours.dateHeureDebut, cours.dateHeureFin, cours.type")
+            ->leftJoin('professeur.cours', 'cours')
+            ->where("cours.dateHeureDebut BETWEEN '$date 00:00:00' AND '$date 23:59:59'")
             ->getQuery()
             ->getResult()
             ;

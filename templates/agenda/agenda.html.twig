@@ -1,14 +1,11 @@
 {% extends 'base.html.twig' %}
-
 {% block title %}Agenda{% endblock %}
 {% block stylesheets %}
     <link rel="stylesheet" type="text/css" href="{{ asset('css/calendar.css') }}">
 {% endblock %}
 {% block body %}
-
-    <script src="https://unpkg.com/vue@3"></script>
+ <script src="https://unpkg.com/vue@3"></script>
     <v-container ma-0 pa-0 fluid>
-
         <v-app-bar :collapse="true" absolute color="deep-purple accent-4" dark scroll-target="#scrolling-techniques-6" >
             <v-spacer></v-spacer>
             <v-tooltip bottom>
@@ -21,20 +18,17 @@
             </v-tooltip>
             <v-spacer></v-spacer>
         </v-app-bar>
-
         <v-container ma-0 pa-0 fluid class="">
             <v-row no-gutters>
                 <v-col cols="12" md="6" lg="6" xl="4" >
                     <v-sheet style="max-height: 100vh; height: 100vh;">
                         <v-calendar ref="calendar" :dark="darkMode" color="primary" type="day" :first-interval="15" :interval-count="24" interval-minutes="30" :events="events" :value="today" @click:event="showEventDetails">
-
                             <template v-slot:day-header="{ day }">
                                 <template v-if="day" class="text-center" >
                                     <v-toolbar flat>
                                         <v-layout justify-center class="pa-0">
                                             <v-btn icon disabled></v-btn>
                                             <v-spacer></v-spacer>
-
                                             <v-tooltip bottom>
                                                 <template v-slot:activator="{ on, attrs }">
                                                     <v-btn v-on="on" v-bind="attrs" fab text small color="grey darken-2" @click="getPreviousDate()" >
@@ -45,7 +39,6 @@
                                                 </template>
                                                 <span>Jours précédent</span>
                                             </v-tooltip>
-
                                             <v-tooltip bottom>
                                                 <template v-slot:activator="{ on, attrs }">
                                                     <v-btn v-on="on" v-bind="attrs" outlined class="mx-4" color="grey darken-2" @click="backToCurrentDate()" >
@@ -54,7 +47,6 @@
                                                 </template>
                                                 <span>Revenir à aujourd'hui</span>
                                             </v-tooltip>
-
                                             <v-tooltip bottom>
                                                 <template v-slot:activator="{ on, attrs }">
                                                     <v-btn v-on="on" v-bind="attrs" fab text small color="grey darken-2" @click="getNextDate()" >
@@ -65,9 +57,7 @@
                                                 </template>
                                                 <span>Jour suivant</span>
                                             </v-tooltip>
-
                                             <v-spacer></v-spacer>
-
                                             <v-tooltip bottom>
                                                 <template v-slot:activator="{ on, attrs }">
                                                     <v-btn v-on="on" v-bind="attrs" icon @click="exportCalendarAsICS()">
@@ -76,41 +66,27 @@
                                                 </template>
                                                 <span>Export ICalendar</span>
                                             </v-tooltip>
-
-
-
                                         </v-layout>
                                     </v-toolbar>
                                 </template>
                             </template>
-
                             <template v-if="isLoadingClass" v-slot:interval="{ hour }">
-                                <div
-                                        class="text-center"
-                                >
-                                    <v-skeleton-loader
-                                            type="list-item"
-                                    ></v-skeleton-loader>
+                                <div class="text-center">
+                                    <-skeleton-loader type="list-item"></v-skeleton-loader>
                                 </div>
                             </template>
-
-
                             <template v-slot:event="{event}">
                                 <div class="fill-height pl-2">
                                     <strong> ${ event.type } de ${ event.name } </strong> ( ${ event.professeur } ) <br/>
                                     Salle ${ event.salle }
                                 </div>
                             </template>
-
                             <template v-slot:day-body="{ date, week }">
                                 <div class="v-current-time" :class="{ first: date === week[0].date }" :style="{ top: nowY }" ></div>
                             </template>
-
                         </v-calendar>
                     </v-sheet>
                 </v-col>
-
-
                 <v-col cols="12"  md="6" lg="6" xl="8" >
                     <v-sheet style="max-height: 100vh; height: 100vh;">
                         <h1 class="text-center">
@@ -124,8 +100,6 @@
                                 ></v-skeleton-loader>
                             </v-col>
                             <v-col v-if="!isLoadingTeachers" cols="12" sm="12" md="12" lg="6" xl="4" v-for="professeur in professeurs">
-
-
                                 <v-card elevation="2" class="my-3 mx-3">
                                     <v-list-item three-line>
                                         <v-list-item-content>
@@ -140,7 +114,6 @@
                                             <v-list-item-subtitle>${ professeur.email }</v-list-item-subtitle>
                                         </v-list-item-content>
                                     </v-list-item>
-
                                     <v-card-actions>
                                         <v-btn outlined rounded text @click="showNotice(professeur)" :disabled="professeur.id === professeurCourant?.id">
                                             Afficher les avis
@@ -150,15 +123,12 @@
                                         </v-btn>
                                     </v-card-actions>
                                 </v-card>
-
-
                             </v-col>
                         </v-row>
                     </v-sheet>
                 </v-col>
             </v-row>
         </v-container>
-
         <v-dialog v-model="showSmallSizeDialog" max-width="800" hide-overlay transition="dialog-bottom-transition" >
             <v-card>
                 <v-card-title>
@@ -168,7 +138,6 @@
                     <span class="headline">Détails</span>
                 </v-card-title>
                 <div>
-
                     <v-list two-line>
                         <v-list-item>
                             <v-list-item-icon>
@@ -176,56 +145,44 @@
                                     mdi-school
                                 </v-icon>
                             </v-list-item-icon>
-
                             <v-list-item-content>
                                 <v-list-item-title>Nom du module</v-list-item-title>
                                 <v-list-item-subtitle>${ currentClassInformations.name }</v-list-item-subtitle>
                             </v-list-item-content>
                         </v-list-item>
-
                         <v-list-item>
                             <v-list-item-action></v-list-item-action>
-
                             <v-list-item-content>
                                 <v-list-item-title>Type</v-list-item-title>
                                 <v-list-item-subtitle>${ currentClassInformations.type }</v-list-item-subtitle>
                             </v-list-item-content>
                         </v-list-item>
-
-
                         <v-list-item>
                             <v-list-item-action></v-list-item-action>
-
                             <v-list-item-content>
                                 <v-list-item-title>Salle</v-list-item-title>
                                 <v-list-item-subtitle>${ currentClassInformations.salle }</v-list-item-subtitle>
                             </v-list-item-content>
                         </v-list-item>
-
                         <v-divider inset></v-divider>
-
                         <v-list-item>
                             <v-list-item-icon>
                                 <v-icon color="indigo">
                                     mdi-account
                                 </v-icon>
                             </v-list-item-icon>
-
                             <v-list-item-content>
                                 <v-list-item-title>Enseignant</v-list-item-title>
                                 <v-list-item-subtitle>${ currentClassInformations.professeur }</v-list-item-subtitle>
                             </v-list-item-content>
                         </v-list-item>
-
                         <v-divider inset></v-divider>
-
                         <v-list-item>
                             <v-list-item-icon>
                                 <v-icon color="indigo">
                                     mdi-clock
                                 </v-icon>
                             </v-list-item-icon>
-
                             <v-list-item-content>
                                 <v-list-item-title>Horaires</v-list-item-title>
                                 <v-list-item-subtitle>${ getOnlyHourOfDate(currentClassInformations.start) } : ${ getOnlyHourOfDate(currentClassInformations.end) }</v-list-item-subtitle>
@@ -235,7 +192,6 @@
                 </div>
             </v-card>
         </v-dialog>
-
         <v-dialog v-model="showNoticeDialog" fullscreen hide-overlay transition="dialog-bottom-transition" >
             <v-card>
                 <v-toolbar dark color="primary" >
@@ -265,7 +221,6 @@
                                     ${ avisCourant.commentaire }
                                 </div>
                                 <div>Commentaire de : ${ avisCourant.emailEtudiant } </div>
-
                                 <v-card-actions>
                                     <v-btn outlined rounded text @click="deleteAvis(avisCourant)" v-if="mesAvis.filter(avis => avis.id === avisCourant.id).length === 1">
                                         Supprimer
@@ -277,7 +232,6 @@
                 </div>
             </v-card>
         </v-dialog>
-
         <v-dialog v-model="showCreateNoticeDialog" fullscreen hide-overlay transition="dialog-bottom-transition" >
             <v-card>
                 <v-toolbar dark color="primary" >
@@ -289,14 +243,8 @@
                 </v-toolbar>
                 <v-container>
                     <v-form ref="form" lazy-validation >
-
-
-
                         <v-text-field v-model="nouvelAvis.emailEtudiant" label="Email étudiant" required ></v-text-field>
-
-
                         <v-textarea v-model="nouvelAvis.commentaire"  label="Commentaire" required ></v-textarea>
-
                         <label>Note :</label>
                         <v-rating
                                 v-model="nouvelAvis.note"
@@ -304,32 +252,23 @@
                                 hover
                                 color="green"
                         ></v-rating>
-
                         <div class="pt-5">
                             <v-alert dense outlined type="error" v-for="error in errors">
                                 ${ error }
                             </v-alert>
                         </div>
-
                         <v-divider class="py-5"></v-divider>
-                        <v-btn color="success" class="mr-4" @click="postAvis()" >
+                        <v-btn color="success" class="mr-4" @click="postAvis(professeurCourant)" >
                             Ajouter l'avis
                         </v-btn>
-
                         <v-btn color="error" class="mr-4" @click="showCreateNoticeDialog = false, professeurCourant = {}" >
                             Annuler
                         </v-btn>
                     </v-form>
                 </v-container>
-
-
             </v-card>
         </v-dialog>
-
     </v-container>
-
-
-
 {% endblock %}
 {% block javascripts %}
     <script src="{{ asset('js/calendar.js') }}"></script>
