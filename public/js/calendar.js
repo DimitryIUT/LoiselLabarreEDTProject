@@ -18,7 +18,7 @@ var app = new Vue({
         isLoadingClass: true,
         isLoadingTeachers: true,
         isLoadingNotice: true,
-        apiBase: 'http://localhost:8000/api',
+        apiBase: 'http://localhost:8888/api',
         professeurs: [],
         professeurCourant: null,
         avis: [],
