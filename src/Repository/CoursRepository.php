@@ -45,6 +45,19 @@ class CoursRepository extends ServiceEntityRepository
         }
     }
 
+    /**
+     * @return Cours[] Returns an array of Cours objects
+     */
+    public function findByDate($date) {
+        return $this->createQueryBuilder('c')
+            ->where('c.dateHeureDebut LIKE :date')
+            ->setParameter('date', $date->format('Y-m-d') . '%')
+            ->orderBy('c.dateHeureDebut', 'ASC')
+            ->getQuery()
+            ->getResult()
+            ;
+    }
+
     // /**
     //  * @return Cours[] Returns an array of Cours objects
     //  */

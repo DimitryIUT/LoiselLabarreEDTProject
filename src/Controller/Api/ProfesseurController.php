@@ -17,7 +17,7 @@ use Symfony\Component\Validator\ConstraintViolationListInterface;
 
 
 
-#[Route('/api/professeurs', name: 'api_professeurs')]
+#[Route('/api/professeurs', name: 'api_professeurs_')]
 class ProfesseurController extends AbstractController
 {
     #[Route('', name: 'list', methods: ['GET'])]
@@ -145,5 +145,20 @@ class ProfesseurController extends AbstractController
         $entityManager->flush();
 
         return $this->json($avis,200);
+    }
+
+    #[Route('/daily/{date}', name: 'show', methods:['GET'])]
+    public function showDaily($date, ProfesseurRepository $professeurRepository): JsonResponse {
+        $dateCours = \DateTime::createFromFormat('Y-m-d', $date);
+
+        if (!$dateCours) {
+            return $this->json([
+                'message' => 'Le format de la date est invalide. Format accepté: AAAA-MM-JJ'
+            ], 404);
+        }
+
+        $professeurs = $professeurRepository->findByCoursFromDate($dateCours);
+
+        return $this->json($professeurs, 200);
     }
 }

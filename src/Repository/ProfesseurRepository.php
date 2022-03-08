@@ -45,6 +45,20 @@ class ProfesseurRepository extends ServiceEntityRepository
         }
     }
 
+    /**
+     * @return Professeur[] Returns an array of Professeur objects
+     */
+    public function findByCoursFromDate($date): array
+    {
+        return $this->createQueryBuilder('p')
+            ->join('p.cours', 'c')
+            ->where('c.dateHeureDebut LIKE :date')
+            ->setParameter('date', $date->format('Y-m-d') . '%')
+            ->getQuery()
+            ->getResult()
+            ;
+    }
+
     // /**
     //  * @return Professeur[] Returns an array of Professeur objects
     //  */
