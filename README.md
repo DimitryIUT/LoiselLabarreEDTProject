@@ -17,6 +17,8 @@ Sont nécéssaires au préalable avant l'installation:
 - Une base de données de type PostgreSQL
 - PHP en version 8+
 
+Veuillez maintenant suivre les étapes suivantes:
+
 - Extraire le contenu de l'archive
 - Ouvrir un terminal dans le dossier et éxécuter la commande `composer install`
 - Ouvrir le fichier .env qui se trouve à la racine du projet et remplacer la ligne DATABASE_URL par la suivante
@@ -34,3 +36,11 @@ DATABASE_URL="postgresql://User:Password@127.0.0.1:5434(ou le port que vous util
 L'installation est désormais terminée vous pouvez essayer d'accèder à l'URL `localhost:8888/admin`pour confirmer le bon fonctionnement de l'application.
 
 ## Découverte de l'interface administrateur
+
+Bienvenue sur l'interface administrateur gerée par l'extension Symfony EasyAdmin. Vous pouvez depuis cette interface réalisez un CRUD de toutes les entités.
+Vous pouvez naviguez entre les entités via les boutons à gauche et vous pouvez commencer à peupler votre base de données en commençant par les Matières et les Salles puis les Professeurs puis les Avis et les Cours.
+
+### Contraintes sur les entités
+
+Des contraintes logiques sont présentes sur les entités:
+-
