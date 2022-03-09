@@ -9,6 +9,8 @@ Vous allez pouvoir retrouver en suivant un sommaire détaillé de ce rapport
 ============
 - [Installation](#installation)
 - [Découverte de l'interface administrateur](#découverte-de-linterface-administrateur)
+  - [Contraintes sur les entités](#contraintes-sur-les-entités)
+- [Points d'entrée API](#points-dentrée-api)
 
 ## Installation
 
@@ -44,3 +46,40 @@ Vous pouvez naviguez entre les entités via les boutons à gauche et vous pouvez
 
 Des contraintes logiques sont présentes sur les entités:
 -
+
+## Points d'entrée API
+
+#### `GET` */professeurs*
+Retourne la liste des professeurs.
+
+#### `GET` */professeurs/{id}*
+Retourne le professeur correspondant à l'ID passé en paramètre.
+
+#### `GET` */professeurs/daily/{date}*
+Retourne la liste des professeurs dispensant des cours à la date passée en paramètre.
+
+#### `GET` */professeurs/{id}/avis*
+Retourne la liste des avis du professeur passé en paramètre.
+
+#### `POST` */professeurs/{id}/avis*
+Créé un avis associé au professeur correspondant à l'ID passé en paramètre.
+
+#### `PATCH` */professeurs/avis/{id}*
+Modifie l'avis correspondant à l'ID passé en paramètre.
+
+#### `DELETE` */professeurs/{id}*
+Supprime l'avis correspondant à l'ID passé en paramètre.
+
+#### `GET` */cours*
+Retourne la liste des cours.
+
+#### `GET` */cours/{date}*
+Retourne la liste des cours se déroulant à la date passée en paramètre.
+
+#### `GET` */salles*
+Retourne la liste des salles.
+
+#### `GET` */salles/{numero}*
+Retourne la salle correspondant au numéro passé en paramètre.
+
+
