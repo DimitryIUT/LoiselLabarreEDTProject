@@ -47,6 +47,10 @@ Vous pouvez naviguez entre les entités via les boutons à gauche et vous pouvez
 Des contraintes logiques sont présentes sur les entités:
 -
 
+## Schéma UML du projet
+
+
+
 ## Points d'entrée API
 
 #### `GET` */professeurs*
