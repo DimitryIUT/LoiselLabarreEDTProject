@@ -287,4 +287,4 @@ Pour afficher les détails des cours nous avons fait apparaître que le type de 
 ### Intégration de "Note ton prof!"
 
 Nous avons intégré le travail réalisé avec toute la classe sur la page principale de l'agenda en affichant les profs qui ont un cours ce jour.
-Les avis sont supprimables si ils sont publiés sur la session actuelle.
+On peut en cliquant sur un professeur, visionner les avis, en créer un et le supprimer si il est encore présent sur la session actuelle.
