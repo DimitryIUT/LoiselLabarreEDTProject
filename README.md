@@ -8,14 +8,14 @@ Vous allez pouvoir retrouver en suivant un sommaire détaillé de ce rapport
 Sommaire
 =========
 - [Installation](#installation)
-- [Découverte de l'interface administrateur](#dcouverte-de-linterface-administrateur)
-    - [Contraintes sur les entités](#contraintes-sur-les-entits)
-- [Schéma UML du projet](#schma-uml-du-projet)
-- [Points d'entrée API](#points-dentre-api)
+- [Découverte de l'interface administrateur](#découverte-de-linterface-administrateur)
+    - [Contraintes sur les entités](#contraintes-sur-les-entités)
+- [Schéma UML du projet](#schéma-uml-du-projet)
+- [Points d'entrée API](#points-dentrée-api)
 - [Interface VueJS](#interface-vuejs)
     - [Affichage des cours d'aujourd'hui](#affichage-des-cours-daujourdhui)
-    - [Détails de chaque cours](#dtails-de-chaque-cours)
-    - [Intégration de "Note ton prof!"](#intgration-de-note-ton-prof)
+    - [Détails de chaque cours](#détails-de-chaque-cours)
+    - [Intégration de "Note ton prof!"](#intégration-de-note-ton-prof)
 
 ## Installation
 
