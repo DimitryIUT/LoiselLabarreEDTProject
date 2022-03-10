@@ -170,6 +170,8 @@ Retourne la salle correspondant au numéro passé en paramètre.
 
 ## Interface VueJS
 
+Vous pouvez maintenant accèder a l'url `localhost:8888/agenda`
+
 Pour la partie front nous avons choisi d'utiliser la librairie [Vuetify](https://vuetifyjs.com/en/) car nous avons trouvé des moyens faciles de générer un agenda via cette librairie
 
 
