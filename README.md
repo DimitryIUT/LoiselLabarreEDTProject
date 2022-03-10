@@ -37,6 +37,7 @@ DATABASE_URL="postgresql://User:Password@127.0.0.1:5434(ou le port que vous util
 - Vérifiez que votre base de données est bien lancée (docker, wamp, laragon etc...)
 - Exécuter la commande `php bin/console doctrine:database:create`
 - Exécuter la commande `php bin/console doctrine:schema:update --force`
+- Ajouter des entités en base de données avec le fichier sql_dump present à la racine du projet (attention les cours sont générés au 11 mars)
 - Placer son terminal dans le dossier public à l'aide de `cd public`ou en rouvrant un directement dedans
 - Exécuter la commande `php -S localhost:8888` , le port est important prière de garder le 8888
 
