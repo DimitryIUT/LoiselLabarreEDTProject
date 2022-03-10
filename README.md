@@ -5,12 +5,17 @@
 Ce projet réalisé par LOISEL Dimitry & LABARRE Théo a pour but de simuler une application web permettant à des étudiants de consulter leur emploi du temps et de noter leurs professeurs.
 Vous allez pouvoir retrouver en suivant un sommaire détaillé de ce rapport
 
-## Sommaire
-============
+Sommaire
+=========
 - [Installation](#installation)
-- [Découverte de l'interface administrateur](#découverte-de-linterface-administrateur)
-  - [Contraintes sur les entités](#contraintes-sur-les-entités)
-- [Points d'entrée API](#points-dentrée-api)
+- [Découverte de l'interface administrateur](#dcouverte-de-linterface-administrateur)
+    - [Contraintes sur les entités](#contraintes-sur-les-entits)
+- [Schéma UML du projet](#schma-uml-du-projet)
+- [Points d'entrée API](#points-dentre-api)
+- [Interface VueJS](#interface-vuejs)
+    - [Affichage des cours d'aujourd'hui](#affichage-des-cours-daujourdhui)
+    - [Détails de chaque cours](#dtails-de-chaque-cours)
+    - [Intégration de "Note ton prof!"](#intgration-de-note-ton-prof)
 
 ## Installation
 
@@ -45,11 +50,88 @@ Vous pouvez naviguez entre les entités via les boutons à gauche et vous pouvez
 ### Contraintes sur les entités
 
 Des contraintes logiques sont présentes sur les entités:
--
+- L'adresse email d'un professeur est unique
+- L'adresse email d'un étudiant sur un avis sur un professeur est unique
+- La date de début est ultérieure à la date de fin du Cours;
+- La date de début et la date de fin du Cours sont le même jour;
+- Le Cours fait au minimum 15 minutes et au maximum 4 heures 30;
+- Le Professeur sélectionné pour un Cours n'est pas déjà affecté à un Cours au mêmes horaires;
+- La Salle sélectionnée pour un Cours n'est pas déjà affectée à un Cours aux mêmes horaires.
+- Les dates de début et de fin du Cours ne soient pas espacés de plus de 4 heures 30.
 
 ## Schéma UML du projet
 
+![Modèle de données](https://cdn.discordapp.com/attachments/900280789391011880/951120443761365072/unknown.png)
 
+Il nous restait seulement à rajouter les classes Salle et Cours à l'existant
+
+<details>
+  <summary>Cours.php</summary>
+
+```php
+#[ORM\Entity(repositoryClass: CoursRepository::class)]
+#[DateHeureCours()]
+#[SalleDisponible()]
+#[ProfesseurDisponible()]
+class Cours
+{
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer')]
+    private $id;
+
+    #[ORM\Column(type: 'datetime')]
+    private $dateHeureDebut;
+
+    #[ORM\Column(type: 'datetime')]
+    private $dateHeureFin;
+
+    #[ORM\Column(type: 'string', length: 255)]
+    private $type;
+
+    #[ORM\ManyToOne(targetEntity: Matiere::class, inversedBy: 'cours')]
+    #[ORM\JoinColumn(nullable: false)]
+    #[Assert\NotNull]
+    private $matiere;
+
+    #[ORM\ManyToOne(targetEntity: Professeur::class, inversedBy: 'cours')]
+    #[ORM\JoinColumn(nullable: false)]
+    #[Assert\NotNull]
+    private $professeur;
+
+    #[ORM\ManyToOne(targetEntity: Salle::class, inversedBy: 'cours')]
+    #[ORM\JoinColumn(nullable: false)]
+    #[Assert\NotNull]
+    private $salle;
+
+    ...
+}
+```
+
+</details>
+
+<details>
+  <summary>Salle.php</summary>
+
+```php
+#[ORM\Entity(repositoryClass: SalleRepository::class)]
+class Salle
+{
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer')]
+    private $id;
+
+    #[ORM\Column(type: 'string', length: 255)]
+    private $numero;
+
+    #[ORM\OneToMany(mappedBy: 'salle', targetEntity: Cours::class)]
+    private $cours;
+
+    ...
+}
+```
+</details>
 
 ## Points d'entrée API
 
@@ -87,3 +169,120 @@ Retourne la liste des salles.
 Retourne la salle correspondant au numéro passé en paramètre.
 
 
+## Interface VueJS
+
+Pour la partie front nous avons choisi d'utiliser la librairie [Vuetify](https://vuetifyjs.com/en/) car nous avons trouvé des moyens faciles de générer un agenda via cette librairie
+
+
+On ajoute au template base.html.twig duquel tous les twigs héritent
+
+<details>
+<summary>import base.html.twig</summary>
+
+```html
+<head>
+  ...
+  <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/@mdi/font@4.x/css/materialdesignicons.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
+  ...
+</head>
+<body>
+  ...
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
+  ...
+</body>
+</html>
+
+```
+</details>
+
+Il y a des incompatibilités de syntaxe entre Twig et VueJS donc nous avons override les delimiters de VueJS comme suivant:
+
+<details>
+<summary>Override delimiters</summary>
+
+```javascript
+var app = new Vue({
+    delimiters: ['${', '}'],
+    el: '#app'
+}
+```
+
+</details> 
+
+
+### Affichage des cours d'aujourd'hui
+
+Avec le composant `<v-calendar>` il devient très simple de créer le calendrier avec ces quelques lignes de code
+
+<details>
+<summary>agenda.html.twig</summary>
+
+```html
+<v-calendar  
+	color="primary"
+	type="day"
+	:first-interval="15"
+	:interval-count="24"
+	interval-minutes="30"
+	:events="events"
+	:value="today"
+>
+</v-calendar>
+```
+</details>
+
+Le reste du traitement est effectué dans calendar.js
+
+<details>
+<summary>calendar.js</summary>
+
+```javascript
+var app = new Vue({
+    delimiters: ['${', '}'],
+    el: '#app',
+    vuetify: new Vuetify({
+        lang: { current: 'fr'}
+    }),
+    data: {
+        appName: "EDT",
+        today: new Date(),
+        events: [],
+    },
+    methods: {
+        //renvoie la date du jour au format YYYY-mm-dd
+        getFormattedTodaysDate() {
+            let year = this.today.getFullYear();
+            let month = this.today.getMonth() + 1;
+            if(month < 10){month = "0" + month;}
+            let day = this.today.getDate();
+            if(day < 10){day = "0" + day;}
+            let formattedDate = `${ year }-${ month }-${ day }`;
+            return formattedDate;
+        },
+        //fait un appel à l'API pour récupérer la liste des cours du jour
+        getCours(){
+            let date = this.getFormattedTodaysDate();
+            axios.get(this.apiBase + '/cours/' + date )
+                .then(response => { this.events = response.data; })
+                .catch(error => { console.log(error); })
+        }
+    },
+    mounted() {
+        this.getCours();
+    }
+})
+```
+</details>
+
+
+### Détails de chaque cours
+
+Pour afficher les détails des cours nous avons fait apparaître que le type de cours, le nom du cours, l'enseignant et la salle sur le calendrier, il suffit simplement de cliquer sur le cours.
+
+### Intégration de "Note ton prof!"
+
+Nous avons intégré le travail réalisé avec toute la classe sur la page principale de l'agenda en affichant les profs qui ont un cours ce jour.
+Les avis sont supprimables si ils sont publiés sur la session actuelle.
