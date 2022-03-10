@@ -57,7 +57,6 @@ Des contraintes logiques sont présentes sur les entités:
 - Le Cours fait au minimum 15 minutes et au maximum 4 heures 30;
 - Le Professeur sélectionné pour un Cours n'est pas déjà affecté à un Cours au mêmes horaires;
 - La Salle sélectionnée pour un Cours n'est pas déjà affectée à un Cours aux mêmes horaires.
-- Les dates de début et de fin du Cours ne soient pas espacés de plus de 4 heures 30.
 
 ## Schéma UML du projet
 
